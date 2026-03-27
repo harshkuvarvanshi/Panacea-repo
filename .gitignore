@@ -1,0 +1,82 @@
+# ================================
+# TERRAFORM FILES
+# ================================
+
+.terraform/
+# Terraform dependencies/plugins yaha download hoti hain
+# Har machine pe dubara generate ho jati hain, isliye Git me nahi daalte
+
+.terraform.lock.hcl
+# Provider versions lock karta hai
+# Optional: team consistency ke liye commit bhi kar sakte ho, but ignore bhi chalega
+
+
+# ================================
+# TERRAFORM STATE (VERY SENSITIVE 🚨)
+# ================================
+
+*.tfstate
+*.tfstate.*
+# Ye actual infrastructure ka current state store karta hai
+# Isme secrets/passwords ho sakte hain
+# Kabhi bhi Git me commit nahi karna (security risk)
+
+
+# ================================
+# TERRAFORM PLAN FILE
+# ================================
+
+*.tfplan
+# terraform plan ka output hota hai
+# Temporary file hai, commit karne ki need nahi
+
+
+# ================================
+# TERRAGRUNT CACHE
+# ================================
+
+.terragrunt-cache/
+# Terragrunt internally modules ko yaha copy karta hai
+# Auto-generate hota hai, useless for Git
+
+
+# ================================
+# VARIABLES / SECRETS 🚨
+# ================================
+
+*.tfvars
+*.tfvars.json
+# Isme DB password, API keys, secrets hote hain
+# Security ke liye Git me nahi daalte
+
+
+# ================================
+# LOG FILES
+# ================================
+
+crash.log
+crash.*.log
+# Terraform crash hone pe logs generate karta hai
+# Debug ke liye local use, Git me nahi chahiye
+
+
+# ================================
+# ENV FILES
+# ================================
+
+.env
+.env.*
+# Environment variables store hote hain (credentials wagairah)
+# Sensitive info hoti hai
+
+
+# ================================
+# IDE / SYSTEM FILES
+# ================================
+
+.vscode/
+.idea/
+*.swp
+.DS_Store
+# Editor (VS Code / IntelliJ) aur OS ke temporary files
+# Project ke liye important nahi
