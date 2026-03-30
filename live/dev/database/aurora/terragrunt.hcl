@@ -6,20 +6,29 @@ terraform {
   source = "../../../../modules/database/aurora"
 }
 
-# dependency on VPC
 dependency "vpc" {
   config_path = "../../networking/vpc"
 }
 
+dependency "aurora_sg" {
+  config_path = "../../networking/security-group/aurora-sg"
+}
+
 inputs = {
-  name = "dev-aurora"
+  name        = "dev-aurora"
+  environment = "dev"
 
   vpc_id = dependency.vpc.outputs.vpc_id
 
   subnet_ids = dependency.vpc.outputs.private_subnet_ids
 
-  allowed_cidr_blocks = ["10.0.0.0/16"]
+  security_group_ids = [
+    dependency.aurora_sg.outputs.security_group_id
+  ]
 
+  db_name     = "mydb"
   db_username = "admin"
   db_password = "StrongPassword123!"
+
+  instance_count = 2   
 }
