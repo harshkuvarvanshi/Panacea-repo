@@ -12,8 +12,9 @@ provider "aws" {
 ############################
 # VPC
 ############################
-resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
+resource "aws_vpc" "this" {
+  cidr_block = var.vpc_cidr
+
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -26,7 +27,7 @@ resource "aws_vpc" "main" {
 # Internet Gateway
 ############################
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.this.id
 
   tags = {
     Name = "${var.name}-igw"
@@ -37,34 +38,32 @@ resource "aws_internet_gateway" "igw" {
 # Public Subnet
 ############################
 resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidr
-  availability_zone       = "${var.aws_region}a"
-  map_public_ip_on_launch = true
+  for_each = toset(var.public_subnet_cidrs)
 
-  tags = {
-    Name = "${var.name}-public-subnet"
-  }
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = each.value
+  availability_zone       = "${var.aws_region}${index(var.public_subnet_cidrs, each.value) == 0 ? "a" : "b"}"
+  map_public_ip_on_launch = true
 }
 
 ############################
 # Private Subnet
 ############################
 resource "aws_subnet" "private" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_cidr
-  availability_zone = "${var.aws_region}a"
+  for_each = toset(var.private_subnet_cidrs)
 
-  tags = {
-    Name = "${var.name}-private-subnet"
-  }
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = each.value
+  availability_zone = "${var.aws_region}${index(var.private_subnet_cidrs, each.value) == 0 ? "a" : "b"}"
 }
+  
+
 
 ############################
 # Public Route Table
 ############################
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.this.id
 
   tags = {
     Name = "${var.name}-public-rt"
@@ -84,6 +83,8 @@ resource "aws_route" "public_internet" {
 # Associate Public Subnet
 ############################
 resource "aws_route_table_association" "public_assoc" {
-  subnet_id      = aws_subnet.public.id
+  for_each = aws_subnet.public
+
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
