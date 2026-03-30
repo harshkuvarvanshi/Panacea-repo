@@ -1,6 +1,20 @@
-variable "name" {}
-variable "aws_region" {}
-variable "vpc_cidr" {}
 
-variable "public_subnet_cidr" {}
-variable "private_subnet_cidr" {}
+variable "vpc_cidr" {
+  type = string
+}
+
+variable "public_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "aws_region" {
+  type = string
+}
+
+variable "name" {
+  type = string
+}
