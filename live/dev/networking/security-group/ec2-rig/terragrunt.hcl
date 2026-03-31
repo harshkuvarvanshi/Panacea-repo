@@ -1,4 +1,4 @@
-include {
+include "root"{
   path = find_in_parent_folders("root.hcl")
 }
 
@@ -7,7 +7,7 @@ dependency "vpc" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/networking/security-groups"
+  source = "${get_repo_root()}/modules/networking/security-group"
 }
 
 inputs = {
@@ -21,7 +21,7 @@ inputs = {
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
-      cidr_blocks = ["YOUR_IP/32"]
+      cidr_blocks = ["27.107.91.50/32"]
       description = "SSH access"
     }
   ]

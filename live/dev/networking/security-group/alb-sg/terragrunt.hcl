@@ -1,30 +1,3 @@
-
-include {
-  path = find_in_parent_folders("root.hcl")
-}
-
-dependency "vpc" {
-  config_path = "../../vpc"
-}
-
-# terraform {
-#   source = "../../../../modules/security/security-groups"  # check name
-# }
-
-terraform {
-  source = "${get_repo_root()}/modules/networking/security-groups"
-}
-
-# dependency "vpc" {
-#   config_path = "../../networking/vpc"
-# }
-
-# inputs = {
-#   ...
-#   vpc_id = dependency.vpc.outputs.vpc_id
-# }
-
-
 include {
   path = find_in_parent_folders("root.hcl")
 }
@@ -34,7 +7,7 @@ dependency "vpc" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/networking/security-groups"
+  source = "${get_repo_root()}/modules/networking/security-group"
 }
 
 inputs = {

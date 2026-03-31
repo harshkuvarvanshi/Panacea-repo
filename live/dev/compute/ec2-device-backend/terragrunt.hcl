@@ -6,6 +6,7 @@ terraform {
   source = "../../../../modules/compute/ec2-instance"
 }
 
+
 dependency "network" {
   config_path = "../../networking/vpc"
 }
