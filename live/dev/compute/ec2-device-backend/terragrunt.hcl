@@ -22,8 +22,8 @@ inputs = {
 ######################
 # Private subnet
 ######################
-  subnet_id           = dependency.network.outputs.private_subnet_ids[0]  # ✅ FIX
-  security_group_ids  = [dependency.dfb_sg.outputs.security_group_id]     # ✅ FIX
+  subnet_id           = dependency.network.outputs.private_subnet_ids[0]  
+  security_group_ids  = [dependency.dfb_sg.outputs.security_group_id]    
 
   associate_public_ip = false
   volume_size         = 60
