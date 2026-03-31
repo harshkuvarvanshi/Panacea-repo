@@ -1,12 +1,12 @@
 terraform {
-  backend "s3" {}
+  backend "s3" {}  #terragrunt khud backend manage kerta h iske jarurat nhi h 
 }
 
-############################
+###########################
 # Provider
 ############################
 provider "aws" {
-  region = var.aws_region
+  region = var.aws_region #terragrunt manage kere ga 
 }
 
 ############################

@@ -10,30 +10,8 @@ resource "aws_db_subnet_group" "this" {
   subnet_ids = var.subnet_ids
 
   tags = {
-    Name = "${var.name}-subnet-group"
-  }
-}
-
-############################
-# Security Group
-############################
-resource "aws_security_group" "aurora" {
-  name   = "${var.name}-aurora-sg"
-  vpc_id = var.vpc_id
-
-  # TEMP: CIDR (replace with SG later)
-  ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_cidr_blocks
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    Name        = "${var.name}-subnet-group"
+    Environment = var.environment
   }
 }
 
@@ -43,29 +21,47 @@ resource "aws_security_group" "aurora" {
 resource "aws_rds_cluster" "this" {
   cluster_identifier = var.name
 
-  engine         = "aurora-mysql"
-  engine_version = "8.0.mysql_aurora.3.04.0"
+  engine         = var.engine
+  engine_version = var.engine_version
 
   database_name   = var.db_name
   master_username = var.db_username
   master_password = var.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.this.name
-  vpc_security_group_ids = [aws_security_group.aurora.id]
+  vpc_security_group_ids = var.security_group_ids   # 🔥 external SG module
 
-  backup_retention_period = 7
-  storage_encrypted       = true
+  backup_retention_period = var.backup_retention_period
+  preferred_backup_window = var.backup_window
 
-  skip_final_snapshot = true
+  storage_encrypted = true
+
+  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
+
+  skip_final_snapshot = var.skip_final_snapshot
+
+  tags = {
+    Name        = var.name
+    Environment = var.environment
+  }
 }
 
 ############################
-# Aurora Instance
+# Aurora Instances (multi)
 ############################
 resource "aws_rds_cluster_instance" "this" {
-  identifier         = "${var.name}-instance"
+  count = var.instance_count
+
+  identifier         = "${var.name}-${count.index}"
   cluster_identifier = aws_rds_cluster.this.id
 
-  instance_class = "db.t3.medium"
+  instance_class = var.instance_class
   engine         = aws_rds_cluster.this.engine
+
+  publicly_accessible = false
+
+  tags = {
+    Name        = "${var.name}-${count.index}"
+    Environment = var.environment
+  }
 }

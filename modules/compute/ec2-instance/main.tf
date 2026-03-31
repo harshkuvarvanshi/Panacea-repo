@@ -1,3 +1,7 @@
+
+# ==========================================================
+# EC2 INSTANCE RESOURCE
+# ==========================================================
 resource "aws_instance" "this" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
@@ -7,10 +11,19 @@ resource "aws_instance" "this" {
 
   key_name = var.key_name
 
+  # ----------------------------------------------------------
+  # TAGS
+  # Name → main identifier
+  # Additional tags → environment, role, etc.
+  # ----------------------------------------------------------
   root_block_device {
     volume_size = var.volume_size
     volume_type = "gp3"
   }
+
+# ==========================================================
+# EC2 INSTANCE RESOURCE
+# ==========================================================
 
   tags = merge(
     {

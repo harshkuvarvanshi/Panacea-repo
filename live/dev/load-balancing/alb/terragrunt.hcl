@@ -1,61 +1,79 @@
-# include {
-#   path = find_in_parent_folders()
-# }
+# ==========================================
+# INCLUDE ROOT CONFIG (Backend + Provider)
+# ==========================================
+include {
+  path = find_in_parent_folders("root.hcl")
+}
 
-# terraform {
-#   source = "../../../infrastructure-modules/load-balancing/alb"
-# }
+# ==========================================
+# MODULE SOURCE (ALB MODULE)
+# ==========================================
+terraform {
+  source = "../../../../modules/networking/alb"
+}
 
-# # ✅ Dependencies (mock for now)
-# dependency "vpc" {
-#   config_path = "../../networking/vpc"
+# ==========================================
+# DEPENDENCY: VPC (for subnets + vpc_id)
+# ==========================================
+dependency "vpc" {
+  config_path = "../../networking/vpc"
+}
 
-#   mock_outputs = {
-#     vpc_id = "vpc-dummy"
-#   }
-# }
+# ==========================================
+# DEPENDENCY: ALB SECURITY GROUP
+# ==========================================
+dependency "alb_sg" {
+  config_path = "../../networking/security-groups/alb-sg"
+}
 
-# dependency "subnets" {
-#   config_path = "../../networking/subnets"
+# ==========================================
+# DEPENDENCY: DFB EC2 (Target Instance)
+# ==========================================
+dependency "dfb_ec2" {
+  config_path = "../../compute/ec2-device-backend"
+}
 
-#   mock_outputs = {
-#     public_subnets = [
-#       "subnet-public-a-dummy",
-#       "subnet-public-b-dummy"
-#     ]
-#   }
-# }
+# ==========================================
+# INPUTS (ACTUAL CONFIGURATION)
+# ==========================================
+inputs = {
 
-# dependency "ec2" {
-#   config_path = "../../compute/ec2"
+  # ------------------------------------------
+  # BASIC DETAILS
+  # ------------------------------------------
+  name        = "panacea-alb"
+  environment = "dev"
 
-#   mock_outputs = {
-#     instance_ids = ["i-dfb-1", "i-dfb-2"]
-#   }
-# }
+  # ------------------------------------------
+  # VPC
+  # ------------------------------------------
+  vpc_id = dependency.vpc.outputs.vpc_id
 
-# dependency "sg" {
-#   config_path = "../../networking/security-group"
+  # ------------------------------------------
+  # PUBLIC SUBNETS (IMPORTANT)
+  # ALB always in PUBLIC subnets
+  # ------------------------------------------
+  subnets = [
+    dependency.vpc.outputs.public_subnet_ids[0],
+    dependency.vpc.outputs.public_subnet_ids[1]
+  ]
 
-#   mock_outputs = {
-#     alb_sg_id = "sg-alb-dummy"
-#   }
-# }
+  # ------------------------------------------
+  # SECURITY GROUP
+  # ------------------------------------------
+  security_groups = [
+    dependency.alb_sg.outputs.security_group_id
+  ]
 
-# inputs = {
-#   name               = "panacea-alb"
-#   environment        = "dev"
-#   target_group_name  = "panacea-dfb-tg"
+  # ------------------------------------------
+  # TARGET GROUP NAME
+  # ------------------------------------------
+  target_group_name = "panacea-dfb-tg"
 
-#   vpc_id = dependency.vpc.outputs.vpc_id
-#   # 🔴 AUTO-REPLACE WHEN READY
-
-#   subnets = dependency.subnets.outputs.public_subnets
-#   # 🔴 MUST BE PUBLIC SUBNETS
-
-#   security_groups = [dependency.sg.outputs.alb_sg_id]
-#   # 🔴 Should allow 80 from 0.0.0.0/0
-
-#   instance_ids = dependency.ec2.outputs.instance_ids
-#   # 🔴 DFB EC2 (PRIVATE)
-# }
+  # ------------------------------------------
+  # TARGET INSTANCES (DFB EC2)
+  # ------------------------------------------
+  instance_ids = [
+    dependency.dfb_ec2.outputs.instance_id
+  ]
+}
