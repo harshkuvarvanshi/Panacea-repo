@@ -1,4 +1,4 @@
-include {
+include "root"{
   path = find_in_parent_folders("root.hcl")
 }
 
@@ -7,7 +7,7 @@ dependency "vpc" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/networking/security-groups"
+  source = "${get_repo_root()}/modules/networking/security-group"
 }
 
 inputs = {

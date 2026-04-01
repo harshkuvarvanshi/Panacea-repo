@@ -1,4 +1,4 @@
-include {
+include "root"{
   path = find_in_parent_folders("root.hcl")
 }
 
@@ -20,7 +20,7 @@ inputs = {
       from_port   = 3306
       to_port     = 3306
       protocol    = "tcp"
-      cidr_blocks = ["10.0.0.0/16"]   # later SG to SG karenge
+      cidr_blocks = ["10.0.0.0/16"]   # later SG to SG 
       description = "MySQL access"
     }
   ]
