@@ -44,6 +44,11 @@ resource "aws_subnet" "public" {
   cidr_block              = each.value
   availability_zone       = "${var.aws_region}${index(var.public_subnet_cidrs, each.value) == 0 ? "a" : "b"}"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-subnet-${each.value}"
+    Type = "public"
+  }
 }
 
 ############################
@@ -55,6 +60,11 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.this.id
   cidr_block        = each.value
   availability_zone = "${var.aws_region}${index(var.private_subnet_cidrs, each.value) == 0 ? "a" : "b"}"
+
+  tags = {
+    Name = "private-subnet-${each.value}"
+    Type = "private"
+  }
 }
   
 
