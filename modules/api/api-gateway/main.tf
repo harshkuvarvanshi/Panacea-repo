@@ -1,3 +1,6 @@
+# ================================
+# API-Gateway
+# ================================
 terraform {
   backend "s3" {}
 }
@@ -12,7 +15,7 @@ resource "aws_apigatewayv2_api" "this" {
   ip_address_type = "ipv4"
  
   tags = {
-    Deployment = "manual"
+    Deployment = "Auto"
   }
 }
 
@@ -33,4 +36,40 @@ resource "aws_apigatewayv2_stage" "default" {
   tags = {
     Name = "${var.name}-default-stage"
   }
+}
+
+# ==========================================================
+# VPC LINK (NEW)
+# ==========================================================
+resource "aws_apigatewayv2_vpc_link" "this" {
+  name               = "${var.name}-vpc-link"
+  subnet_ids         = var.subnet_ids
+  security_group_ids = var.security_group_ids
+}
+
+# ==========================================================
+# INTEGRATION (API → ALB)
+# ==========================================================
+resource "aws_apigatewayv2_integration" "this" {
+  api_id           = aws_apigatewayv2_api.this.id
+  integration_type = "HTTP_PROXY"
+
+  integration_method = "ANY"
+
+  # ALB Listener ARN
+  integration_uri = var.alb_listener_arn
+
+  connection_type = "VPC_LINK"
+  connection_id   = aws_apigatewayv2_vpc_link.this.id
+}
+
+
+# ==========================================================
+# ROUTE
+# ==========================================================
+resource "aws_apigatewayv2_route" "this" {
+  api_id    = aws_apigatewayv2_api.this.id
+  route_key = "ANY /{proxy+}"
+
+  target = "integrations/${aws_apigatewayv2_integration.this.id}"
 }

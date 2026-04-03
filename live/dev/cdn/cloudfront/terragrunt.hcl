@@ -1,32 +1,109 @@
-terraform {
-  source = "../../../infrastructure-modules/cdn/cloudfront"
-}
-
 include {
-  path = find_in_parent_folders()
+  path = find_in_parent_folders("root.hcl")
 }
 
-# 🔗 Dependency: S3 Frontend Bucket
+terraform {
+  source = "${get_repo_root()}/modules/cdn/cloudfront"
+}
+
+
 dependency "s3_frontend" {
   config_path = "../../storage/s3-frontend"
-
-  # 👉 Dummy values (jab tak S3 apply nahi hota)
-  mock_outputs = {
-    bucket_domain_name = "dummy-bucket.s3.amazonaws.com"
-  }
 }
+
+# dependency "s3_artifacts" {
+#   config_path = "../../storage/s3-artifact-bucket"
+# }
 
 inputs = {
   name = "panacea-cloudfront-dev"
 
-  # 🔽 S3 se aa raha hai (IMPORTANT)
-  bucket_domain_name = dependency.s3_frontend.outputs.bucket_domain_name
+  bucket_domain_name = dependency.s3_frontend.outputs.bucket_regional_domain_name
+  #logs_bucket_domain_name = dependency.s3_artifacts.outputs.bucket_regional_domain_name
 
-  # 🔐 Dummy OAI (replace later)
-  origin_access_identity = "origin-access-identity/cloudfront/DUMMY"
 
   tags = {
     Environment = "dev"
     Project     = "panacea"
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+# include {
+#   path = find_in_parent_folders("root.hcl")
+# }
+
+# terraform {
+#   source = "${get_repo_root()}/modules/cdn/cloudfront"
+# }
+
+# # 🔗 S3 dependency
+# dependency "s3_frontend" {
+#   config_path = "../../storage/s3-frontend"
+# }
+
+# inputs = {
+#   name = "panacea-frontend-bucket-dev"
+
+#   block_public_access = false   # temporary
+#    # bucket_domain_name = dependency.s3_frontend.outputs.bucket_regional_domain_name
+
+
+#   enable_versioning = true
+
+#   tags = {
+#     Environment = "dev"
+#     Project     = "panacea"
+#   }
+# }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# terraform {
+#   source = "${get_repo_root()}/modules/cdn/cloudfront"
+# }
+
+# include {
+#   path = find_in_parent_folders("root.hcl")
+# }
+
+# # 🔗 Dependency: S3 Frontend Bucket
+# dependency "s3_frontend" {
+#   config_path = "../../storage/s3-frontend"
+
+# }
+
+
+# inputs = {
+#   name = "panacea-frontend-bucket-dev"
+
+#   block_public_access = false  # temporary
+
+#   enable_versioning = true
+
+#    tags = {
+#     Environment = "dev"
+#     Project     = "panacea"
+#   }
+# }

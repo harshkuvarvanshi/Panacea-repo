@@ -1,6 +1,11 @@
 # ==========================================
 # APPLICATION LOAD BALANCER (ALB)
 # ==========================================
+terraform {
+  backend "s3" {}
+}
+
+
 resource "aws_lb" "this" {
   name               = var.name
   internal           = false  # Internet-facing ALB
@@ -12,11 +17,18 @@ resource "aws_lb" "this" {
   # Security group allowing HTTP (80) from internet
   security_groups = var.security_groups
 
+  access_logs {
+  bucket  = var.logs_bucket_name
+  prefix  = "alb"
+  enabled = true
+}
+
   tags = {
     Name        = var.name
     Environment = var.environment
   }
 }
+
 
 # ==========================================
 # TARGET GROUP (DFB EC2 Backend)
@@ -39,6 +51,7 @@ resource "aws_lb_target_group" "this" {
     unhealthy_threshold = 3
   }
 }
+
 
 # ==========================================
 # ATTACH EC2 INSTANCES TO TARGET GROUP

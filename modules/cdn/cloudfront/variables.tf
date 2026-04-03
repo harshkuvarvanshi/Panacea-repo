@@ -12,3 +12,7 @@ variable "origin_access_identity" {
   description = "CloudFront Origin Access Identity"
   default     = ""
 }
+
+variable "logs_bucket_domain_name" {
+  type = string
+}
