@@ -76,92 +76,7 @@ resource "aws_s3_bucket_policy" "this" {
     ]
   })
 }
-# ###################################
-# # Bucket Policy
-# ###################################
-# resource "aws_s3_bucket_policy" "cloudfront_access" {
-#   bucket = aws_s3_bucket.this.id
 
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Sid    = "AllowCloudFrontAccess"
-#         Effect = "Allow"
-
-#         Principal = {
-#           Service = "cloudfront.amazonaws.com"
-#         }
-
-#         Action = "s3:GetObject"
-
-#         Resource = "${aws_s3_bucket.this.arn}/*"
-
-#         Condition = {
-#           StringEquals = {
-#             "AWS:SourceArn" = var.cloudfront_distribution_arn
-#           }
-#         }
-#       }
-#     ]
-#   })
-# }
-
-# # #################################
-# # Bucket policy for alb
-# # #################################
-# resource "aws_s3_bucket_policy" "alb_logs" {
-#   bucket = aws_s3_bucket.this.id
-
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Sid    = "AllowALBLogs"
-#         Effect = "Allow"
-
-#         Principal = {
-#           Service = "logdelivery.elasticloadbalancing.amazonaws.com"
-#         }
-
-#         Action = "s3:PutObject"
-
-#         Resource = "${aws_s3_bucket.this.arn}/alb/*"
-#       }
-#     ]
-#   })
-# }
-
-# # ###########################################
-# # Bucket Policy for Cloud front 
-# # ###########################################
-# resource "aws_s3_bucket_policy" "logs_policy" {
-#   bucket = aws_s3_bucket.this.id
-
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Sid = "AllowALBLogs"
-#         Effect = "Allow"
-#         Principal = {
-#           Service = "logdelivery.elasticloadbalancing.amazonaws.com"
-#         }
-#         Action   = "s3:PutObject"
-#         Resource = "${aws_s3_bucket.this.arn}/alb/*"
-#       },
-#       {
-#         Sid = "AllowCloudFrontLogs"
-#         Effect = "Allow"
-#         Principal = {
-#           Service = "cloudfront.amazonaws.com"
-#         }
-#         Action   = "s3:PutObject"
-#         Resource = "${aws_s3_bucket.this.arn}/cloudfront/*"
-#       }
-#     ]
-#   })
-# }
 
 # =================================
 # OBJECT OWNERSHIP (ACL DISABLED)
@@ -173,14 +88,6 @@ resource "aws_s3_bucket_ownership_controls" "this" {
     object_ownership = "BucketOwnerEnforced"
   }
 }
-# resource "aws_s3_bucket_ownership_controls" "this" {
-#   bucket = aws_s3_bucket.this.id
-
-#   rule {
-#     object_ownership = "BucketOwnerEnforced"
-#     # ACL completely disable ho jati hai
-#   }
-# }
 
 # ================================
 # PUBLIC ACCESS BLOCK (ALL TRUE)
