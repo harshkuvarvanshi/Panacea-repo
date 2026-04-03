@@ -14,3 +14,8 @@ variable "versioning_enabled" {
   type        = bool
   default     = true
 }
+
+variable "cloudfront_distribution_arn" {
+  type    = string
+  #default = ""   
+}

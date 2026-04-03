@@ -15,7 +15,7 @@ dependency "rig_sg" {
 }
 
 inputs = {
-  instance_name = "panacea-rig-1"
+  instance_name = "panacea-rig"   #panacea-rig
   instance_type = "t3.medium"
 
   ami_id = "ami-0f58b397bc5c1f2e8"
@@ -33,10 +33,10 @@ inputs = {
 
   associate_public_ip = true
   volume_size         = 30
-  key_name            = "panacea-common-key"
+  key_name            = "panacea-key"
 
   tags = {
-    Name        = "panacea-rig-1"
+    Name        = "panacea-rig"
     Environment = "dev"
     Role        = "rig"
   }

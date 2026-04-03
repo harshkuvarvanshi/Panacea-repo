@@ -9,7 +9,7 @@ include {
 # MODULE SOURCE (ALB MODULE)
 # ==========================================
 terraform {
-  source = "../../../../modules/networking/alb"
+  source = "../../../../modules/load-balancing/alb"
 }
 
 # ==========================================
@@ -23,7 +23,12 @@ dependency "vpc" {
 # DEPENDENCY: ALB SECURITY GROUP
 # ==========================================
 dependency "alb_sg" {
-  config_path = "../../networking/security-groups/alb-sg"
+  config_path = "../../networking/security-group/alb-sg"
+}
+
+# s3-artifact dependensy
+dependency "s3_artifacts" {
+  config_path = "../../storage/s3-artifact-bucket"
 }
 
 # ==========================================
@@ -38,11 +43,12 @@ dependency "dfb_ec2" {
 # ==========================================
 inputs = {
 
-  # ------------------------------------------
-  # BASIC DETAILS
-  # ------------------------------------------
+
   name        = "panacea-alb"
   environment = "dev"
+
+    logs_bucket_name = dependency.s3_artifacts.outputs.bucket_id
+
 
   # ------------------------------------------
   # VPC
@@ -77,3 +83,5 @@ inputs = {
     dependency.dfb_ec2.outputs.instance_id
   ]
 }
+
+
