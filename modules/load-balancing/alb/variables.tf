@@ -1,3 +1,6 @@
+# =================================
+# Variables
+# =================================
 variable "name" {
   description = "ALB name"
   type        = string
@@ -31,4 +34,8 @@ variable "instance_ids" {
 variable "target_group_name" {
   description = "Target group name"
   type        = string
+}
+
+variable "logs_bucket_name" {
+  type = string
 }

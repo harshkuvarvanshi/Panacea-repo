@@ -16,19 +16,19 @@ dependency "dfb_sg" {
 }
 
 inputs = {
-  instance_name       = "panacea-dfb-machine"
+  instance_name       = "panacea-dfb-machine" 
   instance_type       = "t3.medium"
   ami_id              = "ami-0f58b397bc5c1f2e8"
 
 ######################
 # Private subnet
 ######################
-  subnet_id           = dependency.network.outputs.private_subnet_ids[0]  # ✅ FIX
-  security_group_ids  = [dependency.dfb_sg.outputs.security_group_id]     # ✅ FIX
+  subnet_id           = dependency.network.outputs.private_subnet_ids[0]  
+  security_group_ids  = [dependency.dfb_sg.outputs.security_group_id]    
 
   associate_public_ip = false
   volume_size         = 60
-  key_name            = "panacea-common-key"
+  key_name            = "panacea-key"
 
   tags = {
     Name        = "panacea-dfb-machine"
