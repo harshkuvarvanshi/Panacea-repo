@@ -11,15 +11,15 @@ dependency "s3_frontend" {
   config_path = "../../storage/s3-frontend"
 }
 
-# dependency "s3_artifacts" {
-#   config_path = "../../storage/s3-artifact-bucket"
-# }
+dependency "s3_artifacts" {
+  config_path = "../../storage/s3-artifact-bucket"
+}
 
 inputs = {
   name = "panacea-cloudfront-dev"
 
   bucket_domain_name = dependency.s3_frontend.outputs.bucket_regional_domain_name
-  #logs_bucket_domain_name = dependency.s3_artifacts.outputs.bucket_regional_domain_name
+  logs_bucket_domain_name = dependency.s3_artifacts.outputs.bucket_regional_domain_name
 
 
   tags = {

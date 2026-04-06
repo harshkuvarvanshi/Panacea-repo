@@ -8,11 +8,17 @@ terraform {
 
 inputs = {
   name = "panacea-artifacts-bucket-dev"
+  enable_alb_logs   = true  
+  enable_acl      = true        # IMPORTANT
+  is_logs_bucket  = true 
 
-  # Security
-  block_public_access = true
-  enable_encryption   = true
-  enable_versioning   = true
+  versioning_enabled = true
+  force_destroy      = true
+
+#   # Security
+#   block_public_access = true
+#   enable_encryption   = true
+#   enable_versioning   = true
 
   # Lifecycle (cost optimization)
   enable_lifecycle = true
