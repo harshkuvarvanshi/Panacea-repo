@@ -17,6 +17,11 @@ terraform {
 # ==========================================
 dependency "vpc" {
   config_path = "../../networking/vpc"
+
+   mock_outputs = {
+    vpc_id = "vpc-123"
+    public_subnet_ids = ["subnet-1", "subnet-2"]
+  }
 }
 
 # ==========================================
@@ -24,11 +29,19 @@ dependency "vpc" {
 # ==========================================
 dependency "alb_sg" {
   config_path = "../../networking/security-group/alb-sg"
+
+  mock_outputs = {
+    security_group_id = "sg-123"
+  }
 }
 
 # s3-artifact dependensy
 dependency "s3_artifacts" {
   config_path = "../../storage/s3-artifact-bucket"
+
+   mock_outputs = {
+    bucket_id = "mock-bucket"
+  }
 }
 
 # ==========================================
@@ -36,6 +49,10 @@ dependency "s3_artifacts" {
 # ==========================================
 dependency "dfb_ec2" {
   config_path = "../../compute/ec2-device-backend"
+
+  mock_outputs = {
+    instance_id = "i-123"
+  }
 }
 
 # ==========================================

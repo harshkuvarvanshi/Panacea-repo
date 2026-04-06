@@ -28,6 +28,10 @@ inputs = {
   instance_type         = "t3.micro"
   ami_id                = "ami-0f58b397bc5c1f2e8"
 
+# FIXED SUBNET
+# subnet_id = "subnet-00e5953105decbc08"         # temp testing 
+# security_group_ids = ["sg-06a3dc435a82e56ec"]  # temp testing
+
   subnet_id             = dependency.network.outputs.public_subnet_ids[0]
   security_group_ids    = [dependency.bastion_sg.outputs.security_group_id]
 

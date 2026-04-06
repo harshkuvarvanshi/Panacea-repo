@@ -12,9 +12,11 @@ terraform {
 
 inputs = {
   name = "panacea-frontend-bucket-dev"
+  enable_acl      = false
+  is_logs_bucket  = false
 
-  #cloudfront_distribution_arn = dependency.cloudfront.outputs.distribution_arn # it enable when we use oai
-
+  enable_cloudfront_access = true
+  cloudfront_distribution_arn = ""
 
 
   enable_static_website = true

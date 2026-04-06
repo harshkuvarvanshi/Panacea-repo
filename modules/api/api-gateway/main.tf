@@ -22,21 +22,21 @@ resource "aws_apigatewayv2_api" "this" {
 # ==========================================================
 # DEFAULT STAGE ($default)
 # ==========================================================
-resource "aws_apigatewayv2_stage" "default" {
+# resource "aws_apigatewayv2_stage" "default" {
 
-  # Attach to API
-  api_id = aws_apigatewayv2_api.this.id
+#   # Attach to API
+#   api_id = aws_apigatewayv2_api.this.id
 
-  # Default stage (auto-created endpoint)
-  name = "$default"
+#   # Default stage (auto-created endpoint)
+#   name = "$default"
 
-  # Auto deploy enabled (no manual deployment needed)
-  auto_deploy = true
+#   # Auto deploy enabled (no manual deployment needed)
+#   auto_deploy = true
 
-  tags = {
-    Name = "${var.name}-default-stage"
-  }
-}
+#   tags = {
+#     Name = "${var.name}-default-stage"
+#   }
+# }
 
 # ==========================================================
 # VPC LINK (NEW)
@@ -72,4 +72,33 @@ resource "aws_apigatewayv2_route" "this" {
   route_key = "ANY /{proxy+}"
 
   target = "integrations/${aws_apigatewayv2_integration.this.id}"
+}
+
+resource "aws_cloudwatch_log_group" "api_logs" {
+  name              = "/aws/api-gateway/panacea-dev"
+  retention_in_days = 7
+}
+
+resource "aws_apigatewayv2_stage" "default" {
+
+  api_id      = aws_apigatewayv2_api.this.id
+  name        = "$default"
+  auto_deploy = true
+
+  # 🔥 ADD THIS BLOCK
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_logs.arn
+
+    format = jsonencode({
+      requestId = "$context.requestId"
+      ip        = "$context.identity.sourceIp"
+      method    = "$context.httpMethod"
+      route     = "$context.routeKey"
+      status    = "$context.status"
+    })
+  }
+
+  tags = {
+    Name = "${var.name}-default-stage"
+  }
 }

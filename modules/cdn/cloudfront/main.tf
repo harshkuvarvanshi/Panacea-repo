@@ -13,9 +13,9 @@ resource "aws_cloudfront_distribution" "this" {
 
   origin {
     domain_name = var.bucket_domain_name
-    origin_id   = "s3-origin"
+    origin_id   =  var.name
 
-      origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
 
   }
 
@@ -23,7 +23,7 @@ resource "aws_cloudfront_distribution" "this" {
   
 
   default_cache_behavior {
-    target_origin_id       = "s3-origin"
+    target_origin_id       = var.name
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET", "HEAD"]
@@ -32,14 +32,7 @@ resource "aws_cloudfront_distribution" "this" {
     cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
   }
 
-#  ADD THIS
-#   logging_config {
-#     bucket          = var.logs_bucket_domain_name
-#     include_cookies = false
-#     prefix          = "cloudfront/"
-#   }
-
-  viewer_certificate {
+ viewer_certificate {
     cloudfront_default_certificate = true
   }
 
@@ -48,7 +41,29 @@ resource "aws_cloudfront_distribution" "this" {
       restriction_type = "none"
     }
   }
+
+  tags = {
+    Name = var.name
+  }
 }
+
+
+#   logging_config {
+#     bucket          = var.logs_bucket_domain_name
+#     include_cookies = false
+#     prefix          = "cloudfront/"
+#   }
+
+#   viewer_certificate {
+#     cloudfront_default_certificate = true
+#   }
+
+#   restrictions {
+#     geo_restriction {
+#       restriction_type = "none"
+#     }
+#   }
+# }
 
 
 
