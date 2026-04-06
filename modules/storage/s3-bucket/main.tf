@@ -1,4 +1,3 @@
-## Tag name change kerna h sab me 
 
 terraform {
   backend "s3" {}
@@ -14,8 +13,7 @@ resource "aws_s3_bucket" "this" {
 
   tags = {
     Name       = var.name
-    Deployment = "auto"
-    # Requirement ke according tag
+    Deployment = "terragrunt"
   }
 }
 
@@ -25,22 +23,49 @@ resource "aws_s3_bucket" "this" {
 resource "aws_s3_bucket_ownership_controls" "this" {
   bucket = aws_s3_bucket.this.id
 
-  rule {
-    object_ownership = var.enable_acl ? "ObjectWriter" : "BucketOwnerEnforced"
-  }
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = concat(
+      # Only add CloudFront read if a distribution ARN was provided
+      var.cloudfront_distribution_arn != null ? [
+        {
+          Sid    = "AllowCloudFrontRead"
+          Effect = "Allow"
+          Principal = { Service = "cloudfront.amazonaws.com" }
+          Action   = "s3:GetObject"
+          Resource = "${aws_s3_bucket.this.arn}/*"
+          Condition = {
+            StringEquals = {
+              "AWS:SourceArn" = var.cloudfront_distribution_arn
+            }
+          }
+        }
+      ] : [],
+
+      # ALB logs — always present
+      [
+        {
+          Sid    = "AllowALBLogs"
+          Effect = "Allow"
+          Principal = { Service = "logdelivery.elasticloadbalancing.amazonaws.com" }
+          Action   = "s3:PutObject"
+          Resource = "${aws_s3_bucket.this.arn}/alb/*"
+        }
+      ],
+
+      # CloudFront logs — always present
+      [
+        {
+          Sid    = "AllowCloudFrontLogs"
+          Effect = "Allow"
+          Principal = { Service = "cloudfront.amazonaws.com" }
+          Action   = "s3:PutObject"
+          Resource = "${aws_s3_bucket.this.arn}/cloudfront/*"
+        }
+      ]
+    )
+  })
 }
-
-# ================================
-# ACL (ONLY FOR LOGS BUCKET)
-# ================================
-resource "aws_s3_bucket_acl" "this" {
-  count  = var.enable_acl ? 1 : 0
-  bucket = aws_s3_bucket.this.id
-  acl    = "log-delivery-write"
-
-  depends_on = [aws_s3_bucket_ownership_controls.this]
-}
-
 
 # =================================
 # OBJECT OWNERSHIP (ACL DISABLED)

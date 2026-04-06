@@ -16,29 +16,7 @@ variable "versioning_enabled" {
 }
 
 variable "cloudfront_distribution_arn" {
-  type    = string
-  default = ""   
-}
-
-variable "enable_acl" {
-  description = "Enable ACL for logs bucket"
-  type        = bool
-  default     = false  #for cloudfront acl enable
-}
-
-variable "is_logs_bucket" {
-  description = "Is this logs bucket?"
-  type        = bool
-  default     = false
-}
-variable "enable_cloudfront_access" {
-  type    = bool
-  default = false
-
-}
-
-variable "enable_alb_logs" {
-  description = "Allow ALB to write logs to this bucket"
-  type        = bool
-  default     = false
+  description = "CloudFront distribution ARN (required only for frontend bucket with OAC). Leave null for all other buckets."
+  type        = string
+  default     = null
 }

@@ -14,20 +14,17 @@ resource "aws_instance" "this" {
 
   key_name = var.key_name
 
-  # ----------------------------------------------------------
-  # TAGS
-  # Name → main identifier
-  # Additional tags → environment, role, etc.
-  # ----------------------------------------------------------
+  # ── IAM Instance Profile ──────────────────────────────────
+  # Required for EC2 to call AWS APIs (OpenSearch, SSM, etc.)
+  iam_instance_profile = var.iam_instance_profile_name
+
+  # ── Storage ───────────────────────────────────────────────
   root_block_device {
     volume_size = var.volume_size
     volume_type = "gp3"
   }
 
-# ==========================================================
-# EC2 INSTANCE RESOURCE
-# ==========================================================
-
+  # ── Tags ──────────────────────────────────────────────────
   tags = merge(
     {
       Name = var.instance_name
@@ -35,23 +32,3 @@ resource "aws_instance" "this" {
     var.tags
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
