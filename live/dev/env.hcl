@@ -3,6 +3,7 @@ locals {
   aws_region            = "ap-south-1"
   ec2_instance_type     = "t3.medium"
   vpc_cidr              = "10.0.0.0/16"
+  aws_account_id        = get_aws_account_id()
   availability_zones    = ["ap-south-1a", "ap-south-1b"]
 
   enable_deletion_protection = false

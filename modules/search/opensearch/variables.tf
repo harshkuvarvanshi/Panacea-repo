@@ -2,6 +2,10 @@ variable "name" {
   type = string
 }
 
+variable "environment" {
+  type = string
+}
+
 variable "network_policy_name" {
   type = string
 }

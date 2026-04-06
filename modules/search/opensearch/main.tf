@@ -7,8 +7,6 @@ terraform {
   backend "s3" {}
 }
 
-
-
 resource "aws_opensearchserverless_security_policy" "encryption" {
   name = "${var.name}-encryption"
   type = "encryption"
@@ -25,7 +23,9 @@ resource "aws_opensearchserverless_security_policy" "encryption" {
 }
 
 # ================================
-# NETWORK POLICY (PUBLIC ACCESS)
+# NETWORK POLICY
+# Allows both public access AND
+# future VPC endpoint (additive)
 # ================================
 resource "aws_opensearchserverless_security_policy" "network" {
   name = var.network_policy_name
@@ -57,12 +57,16 @@ resource "aws_opensearchserverless_collection" "this" {
   ]
 
   tags = {
-    Name = var.name
+    Name        = var.name
+    Environment = var.environment
+    ManagedBy   = "terraform"
   }
 }
 
 # ================================
 # DATA ACCESS POLICY
+# Grants EC2 role + Firehose role
+# full index r/w access
 # ================================
 resource "aws_opensearchserverless_access_policy" "this" {
   name = var.access_policy_name
@@ -71,7 +75,7 @@ resource "aws_opensearchserverless_access_policy" "this" {
   policy = jsonencode([
     {
       Rules = [
-        # COLLECTION LEVEL
+        # ── Collection level ─────────────────
         {
           Resource = ["collection/${var.name}"]
           Permission = [
@@ -83,7 +87,7 @@ resource "aws_opensearchserverless_access_policy" "this" {
           ResourceType = "collection"
         },
 
-        # INDEX LEVEL (VERY IMPORTANT)
+        # ── Index level (required for read/write) ─
         {
           Resource = ["index/${var.name}/*"]
           Permission = [
@@ -98,6 +102,7 @@ resource "aws_opensearchserverless_access_policy" "this" {
         }
       ]
 
+      # All principals (EC2 role + Firehose role) in one policy
       Principal = var.principals
     }
   ])

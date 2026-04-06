@@ -16,6 +16,7 @@ variable "versioning_enabled" {
 }
 
 variable "cloudfront_distribution_arn" {
-  type    = string
-  #default = ""   
+  description = "CloudFront distribution ARN (required only for frontend bucket with OAC). Leave null for all other buckets."
+  type        = string
+  default     = null
 }
