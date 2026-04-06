@@ -32,14 +32,7 @@ resource "aws_cloudfront_distribution" "this" {
     cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
   }
 
- 
-  logging_config {
-    bucket          = var.logs_bucket_domain_name
-    include_cookies = false
-    prefix          = "cloudfront/"
-  }
-
-  viewer_certificate {
+ viewer_certificate {
     cloudfront_default_certificate = true
   }
 
@@ -48,7 +41,29 @@ resource "aws_cloudfront_distribution" "this" {
       restriction_type = "none"
     }
   }
+
+  tags = {
+    Name = var.name
+  }
 }
+
+
+#   logging_config {
+#     bucket          = var.logs_bucket_domain_name
+#     include_cookies = false
+#     prefix          = "cloudfront/"
+#   }
+
+#   viewer_certificate {
+#     cloudfront_default_certificate = true
+#   }
+
+#   restrictions {
+#     geo_restriction {
+#       restriction_type = "none"
+#     }
+#   }
+# }
 
 
 

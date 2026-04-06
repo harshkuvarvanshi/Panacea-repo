@@ -15,4 +15,5 @@ variable "origin_access_identity" {
 
 variable "logs_bucket_domain_name" {
   type = string
+  default = ""
 }

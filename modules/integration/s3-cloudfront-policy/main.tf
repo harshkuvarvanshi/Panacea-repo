@@ -1,3 +1,6 @@
+terraform {
+  backend "s3" {}
+}
 resource "aws_s3_bucket_policy" "cloudfront_access" {
   bucket = var.bucket_id
 
