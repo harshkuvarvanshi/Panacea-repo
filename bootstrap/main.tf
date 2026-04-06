@@ -4,9 +4,9 @@
 resource "aws_s3_bucket" "state" {
   bucket = var.bucket_name
 
-  #lifecycle {
-   # prevent_destroy = true
-  #}
+  lifecycle {
+    prevent_destroy = true
+  }
 
   tags = {
     Name = var.bucket_name
@@ -62,7 +62,7 @@ resource "aws_dynamodb_table" "locks" {
     type = "S"
   }
 
-  #lifecycle {
-  #  prevent_destroy = true
-  #}
+  lifecycle {
+    prevent_destroy = true
+  }
 }
