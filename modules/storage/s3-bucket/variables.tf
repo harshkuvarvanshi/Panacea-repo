@@ -20,3 +20,15 @@ variable "cloudfront_distribution_arn" {
   type        = string
   default     = null
 }
+
+variable "enable_acl" {
+  description = "Enable ACL or not"
+  type        = bool
+  default     = false
+}
+
+variable "enable_alb_logs" {
+  description = "Enable ALB logging"
+  type        = bool
+  default     = false
+}

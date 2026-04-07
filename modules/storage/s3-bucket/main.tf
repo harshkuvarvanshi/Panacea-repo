@@ -23,48 +23,9 @@ resource "aws_s3_bucket" "this" {
 resource "aws_s3_bucket_ownership_controls" "this" {
   bucket = aws_s3_bucket.this.id
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = concat(
-      # Only add CloudFront read if a distribution ARN was provided
-      var.cloudfront_distribution_arn != null ? [
-        {
-          Sid    = "AllowCloudFrontRead"
-          Effect = "Allow"
-          Principal = { Service = "cloudfront.amazonaws.com" }
-          Action   = "s3:GetObject"
-          Resource = "${aws_s3_bucket.this.arn}/*"
-          Condition = {
-            StringEquals = {
-              "AWS:SourceArn" = var.cloudfront_distribution_arn
-            }
-          }
-        }
-      ] : [],
-
-      # ALB logs — always present
-      [
-        {
-          Sid    = "AllowALBLogs"
-          Effect = "Allow"
-          Principal = { Service = "logdelivery.elasticloadbalancing.amazonaws.com" }
-          Action   = "s3:PutObject"
-          Resource = "${aws_s3_bucket.this.arn}/alb/*"
-        }
-      ],
-
-      # CloudFront logs — always present
-      [
-        {
-          Sid    = "AllowCloudFrontLogs"
-          Effect = "Allow"
-          Principal = { Service = "cloudfront.amazonaws.com" }
-          Action   = "s3:PutObject"
-          Resource = "${aws_s3_bucket.this.arn}/cloudfront/*"
-        }
-      ]
-    )
-  })
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
 }
 
 # =================================
@@ -166,7 +127,7 @@ locals {
   policy_statements = concat(
 
     # 1. CloudFront → S3 Read
-    length(var.cloudfront_distribution_arn) > 0 ? [{
+   var.cloudfront_distribution_arn != null && var.cloudfront_distribution_arn != "" ? [{
       Sid    = "AllowCloudFrontRead"
       Effect = "Allow"
       Principal = {
