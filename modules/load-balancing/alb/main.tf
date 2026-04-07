@@ -17,11 +17,11 @@ resource "aws_lb" "this" {
   # Security group allowing HTTP (80) from internet
   security_groups = var.security_groups
 
-  access_logs {
-  bucket  = var.logs_bucket_name
-  prefix  = "alb"
-  enabled = true
-}
+  #access_logs {
+ #bucket  = var.logs_bucket_name
+  #prefix  = "alb"
+ # enabled = true
+#}
 
   tags = {
     Name        = var.name

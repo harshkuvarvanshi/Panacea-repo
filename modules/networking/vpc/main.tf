@@ -1,6 +1,6 @@
-# terraform {
-#   backend "s3" {}  #terragrunt khud backend manage kerta h iske jarurat nhi h 
-# }
+ terraform {
+  backend "s3" {}  #terragrunt khud backend manage kerta h iske jarurat nhi h 
+}
 
 ###########################
 # Provider
