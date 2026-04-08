@@ -9,6 +9,17 @@ include {
 # VPC
 dependency "vpc" {
   config_path = "../../networking/vpc"
+
+  mock_outputs = {
+    vpc_id = "vpc-12345678"
+
+    private_subnet_ids = [
+      "subnet-private-33333333",
+      "subnet-private-44444444"
+    ]
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # ALB

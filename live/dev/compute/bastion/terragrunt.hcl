@@ -47,7 +47,7 @@ dependency "iam" {
 inputs = {
   instance_name         = "panacea-bastion"
   instance_type         = "t3.micro"
-  ami_id                = "ami-0f58b397bc5c1f2e8"
+  ami_id                = "ami-0e7ff22101b84bcff"
 
 # FIXED SUBNET
 # subnet_id = "subnet-00e5953105decbc08"         # temp testing 

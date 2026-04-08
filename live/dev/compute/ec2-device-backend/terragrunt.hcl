@@ -43,7 +43,7 @@ dependency "iam" {
 inputs = {
   instance_name       = "panacea-dfb-machine"
   instance_type       = "t3.medium"
-  ami_id              = "ami-0f58b397bc5c1f2e8"
+  ami_id              = "ami-0e7ff22101b84bcff"
 
   # Private subnet — not directly reachable from internet
   subnet_id           = dependency.network.outputs.private_subnet_ids[0]
