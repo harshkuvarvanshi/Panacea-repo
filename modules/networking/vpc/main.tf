@@ -81,6 +81,17 @@ resource "aws_route_table" "public" {
 }
 
 ############################
+# Private Route Table
+############################
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name = "${var.name}-private-rt"
+  }
+}
+
+############################
 # Route to Internet
 ############################
 resource "aws_route" "public_internet" {
@@ -91,10 +102,20 @@ resource "aws_route" "public_internet" {
 
 ############################
 # Associate Public Subnet
-############################
+############################  
 resource "aws_route_table_association" "public_assoc" {
   for_each = aws_subnet.public
 
   subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
+}
+
+############################
+# Associate Private Subnet
+############################  
+resource "aws_route_table_association" "private_assoc" {
+  for_each = aws_subnet.private
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private.id
 }

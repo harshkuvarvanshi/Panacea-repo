@@ -8,6 +8,14 @@ terraform {
 
 dependency "vpc" {
   config_path = "../../networking/vpc"
+
+  mock_outputs = {
+    vpc_id              = "vpc-12345678"
+    private_subnet_ids  = ["subnet-11111111", "subnet-22222222"]
+    public_subnet_ids   = ["subnet-33333333", "subnet-44444444"]
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "postgres_sg" {
@@ -16,7 +24,7 @@ dependency "postgres_sg" {
   mock_outputs = {
     security_group_id = "sg-00000000"
   }
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 inputs = {

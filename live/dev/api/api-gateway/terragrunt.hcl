@@ -9,16 +9,44 @@ include {
 # VPC
 dependency "vpc" {
   config_path = "../../networking/vpc"
+
+  mock_outputs = {
+    vpc_id = "vpc-12345678"
+
+    private_subnet_ids = [
+      "subnet-private-33333333",
+      "subnet-private-44444444"
+    ]
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # ALB
 dependency "alb" {
   config_path = "../../load-balancing/alb"
+
+  mock_outputs = {
+    alb_arn           = "arn:aws:elasticloadbalancing:ap-south-1:123456789012:loadbalancer/app/mock-alb/123abc"
+    alb_dns_name      = "mock-alb-123456.ap-south-1.elb.amazonaws.com"
+    target_group_arn  = "arn:aws:elasticloadbalancing:ap-south-1:123456789012:targetgroup/mock-tg/abc123"
+    alb_listener_arn      = "arn:aws:elasticloadbalancing:ap-south-1:123456789012:listener/app/mock-alb/123abc/456def"
+
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "sg" {
   config_path = "../../networking/security-group/alb-sg"
+
+  mock_outputs = {
+    security_group_id = "sg-87654321"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
+
 
 inputs = {
   name = "panacea-api"

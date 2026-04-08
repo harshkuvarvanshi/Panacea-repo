@@ -8,6 +8,12 @@ terraform {
 
 dependency "vpc" {
   config_path = "../../vpc"
+
+  mock_outputs = {
+    vpc_id = "vpc-12345678"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "ec2_backend_sg" {
@@ -16,7 +22,7 @@ dependency "ec2_backend_sg" {
   mock_outputs = {
     security_group_id = "sg-00000000"
   }
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "bastion_sg" {
@@ -25,7 +31,7 @@ dependency "bastion_sg" {
   mock_outputs = {
     security_group_id = "sg-11111111"
   }
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 inputs = {
