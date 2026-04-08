@@ -2,7 +2,7 @@
 # APPLICATION LOAD BALANCER (ALB)
 # ==========================================
 terraform {
-  backend "s3" {}
+  backend "s3" {}         # Store Terraform state in S3
 }
 
 
@@ -17,10 +17,10 @@ resource "aws_lb" "this" {
   # Security group allowing HTTP (80) from internet
   security_groups = var.security_groups
 
-  #access_logs {
- #bucket  = var.logs_bucket_name
-  #prefix  = "alb"
- # enabled = true
+#access_logs {
+#bucket  = var.logs_bucket_name
+#prefix  = "alb"                                      # S3 bucket for ALB logs
+# enabled = true
 #}
 
   tags = {
@@ -32,6 +32,7 @@ resource "aws_lb" "this" {
 
 # ==========================================
 # TARGET GROUP (DFB EC2 Backend)
+# Defines backend EC2 instances where traffic will be routed
 # ==========================================
 resource "aws_lb_target_group" "this" {
   name        = var.target_group_name

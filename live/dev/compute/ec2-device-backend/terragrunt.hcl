@@ -6,10 +6,12 @@ terraform {
   source = "../../../../modules/compute/ec2-instance"
 }
 
+# VPC
 dependency "network" {
   config_path = "../../networking/vpc"
 }
 
+# Security Group 
 dependency "dfb_sg" {
   config_path = "../../networking/security-group/ec2-device-backend"
 }

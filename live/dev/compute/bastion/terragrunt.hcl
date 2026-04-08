@@ -1,3 +1,8 @@
+# ===================================================
+# This Terragrunt configuration deploys a Bastion EC2 instance, inherits common settings from root.hcl, 
+# and uses dependencies to dynamically fetch VPC subnet, security group, and IAM instance profile so the 
+# instance is securely placed in the correct network and has proper access to AWS services.
+
 include {
   path = find_in_parent_folders("root.hcl")
 }
@@ -10,10 +15,12 @@ terraform {
   source = "${local.modules_path}/compute/ec2-instance"
 }
 
-dependency "network" {
+# VPC
+dependency "network" {  
   config_path = "../../networking/vpc"
 }
 
+# Security Group
 dependency "bastion_sg" {
   config_path = "../../networking/security-group/bastion-sg"
 }

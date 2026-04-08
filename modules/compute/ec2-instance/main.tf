@@ -2,9 +2,12 @@
 # EC2 INSTANCE RESOURCE
 # ==========================================================
 terraform {
-  backend "s3" {}
-}
+  backend "s3" {}   # Store Terraform state remotely in S3
+} 
 
+# ==================================
+# Create EC2 instance with required configurations
+# ==================================
 resource "aws_instance" "this" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
@@ -20,8 +23,8 @@ resource "aws_instance" "this" {
 
   # ── Storage ───────────────────────────────────────────────
   root_block_device {
-    volume_size = var.volume_size
-    volume_type = "gp3"
+    volume_size = var.volume_size      # Disk size in GB  
+    volume_type = "gp3"                # General Purpose SSD
   }
 
   # ── Tags ──────────────────────────────────────────────────

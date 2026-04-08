@@ -1,3 +1,9 @@
+# This Terragrunt configuration deploys the API Gateway module, 
+# inherits common settings from root.hcl, 
+# and connects it with existing infrastructure by fetching VPC private subnets,
+# ALB listener ARN, and security group via dependencies to route API traffic securely to the backend.
+
+
 terraform {
   source = "../../../../modules/api/api-gateway"
 }

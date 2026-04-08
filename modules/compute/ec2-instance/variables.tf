@@ -1,33 +1,37 @@
+# ====================================
+# Input variables for configuring EC2 instance properties
+# ====================================
+
 variable "instance_name" {
-  type = string
+  type = string            # Name tag for the EC2 instance
 }
 
 variable "ami_id" {
-  type = string
+  type = string            # AMI ID (OS image for instance)
 }
 
 variable "instance_type" {
-  type = string
+  type = string            # EC2 instance type (e.g., t2.micro)
 }
 
 variable "subnet_id" {
-  type = string
+  type = string            # Subnet ID where instance will be deployed
 }
 
 variable "security_group_ids" {
-  type = list(string)
+  type = list(string)     # List of security groups (firewall rules)
 }
 
 variable "associate_public_ip" {
-  type = bool
+  type = bool              # Whether to assign a public IP
 }
 
 variable "volume_size" {
-  type = number
+  type = number             # Root volume size (in GB)
 }
 
 variable "key_name" {
-  type = string
+  type = string            # SSH key pair name for login acces
 }
 
 # ── NEW: IAM Instance Profile ─────────────────────────────

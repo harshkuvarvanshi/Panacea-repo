@@ -1,3 +1,6 @@
+# This policy allows only the specified CloudFront distribution to securely read (GetObject) files
+# from the S3 bucket, preventing direct public access.
+
 terraform {
   backend "s3" {}
 }

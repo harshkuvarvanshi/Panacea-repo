@@ -19,24 +19,6 @@ resource "aws_apigatewayv2_api" "this" {
   }
 }
 
-# ==========================================================
-# DEFAULT STAGE ($default)
-# ==========================================================
-# resource "aws_apigatewayv2_stage" "default" {
-
-#   # Attach to API
-#   api_id = aws_apigatewayv2_api.this.id
-
-#   # Default stage (auto-created endpoint)
-#   name = "$default"
-
-#   # Auto deploy enabled (no manual deployment needed)
-#   auto_deploy = true
-
-#   tags = {
-#     Name = "${var.name}-default-stage"
-#   }
-# }
 
 # ==========================================================
 # VPC LINK (NEW)

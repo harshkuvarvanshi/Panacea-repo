@@ -6,10 +6,12 @@ terraform {
   source = "../../../../modules/compute/ec2-instance"
 }
 
+# Dependency fetches VPC outputs (like public subnet) so instance is placed correctly in network
 dependency "network" {
   config_path = "../../networking/vpc"
 }
 
+# Dependency fetches security group ID to control traffic rules for RIG instance
 dependency "rig_sg" {
   config_path = "../../networking/security-group/ec2-rig"
 }
