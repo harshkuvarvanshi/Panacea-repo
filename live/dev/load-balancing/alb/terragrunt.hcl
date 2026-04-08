@@ -21,6 +21,8 @@ dependency "vpc" {
    mock_outputs = {
     vpc_id = "vpc-123"
     public_subnet_ids = ["subnet-1", "subnet-2"]
+
+    mock_outputs_allowed_terraform_commands = ["init", "plan"]
   }
 }
 
@@ -33,6 +35,8 @@ dependency "alb_sg" {
   mock_outputs = {
     security_group_id = "sg-123"
   }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # s3-artifact dependensy
@@ -42,6 +46,8 @@ dependency "s3_artifacts" {
    mock_outputs = {
     bucket_id = "mock-bucket"
   }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # ==========================================
@@ -53,6 +59,8 @@ dependency "dfb_ec2" {
   mock_outputs = {
     instance_id = "i-123"
   }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # ==========================================
