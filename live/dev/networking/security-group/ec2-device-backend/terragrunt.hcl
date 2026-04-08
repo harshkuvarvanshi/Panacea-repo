@@ -8,10 +8,21 @@ include "root" {
 
 dependency "vpc" {
   config_path = "../../vpc"
+  mock_outputs = {
+    vpc_id = "vpc-12345678"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "alb_sg" {
   config_path = "../alb-sg"
+
+   mock_outputs = {
+    security_group_id = "sg-12345678"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 
 }
 
