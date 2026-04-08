@@ -8,10 +8,23 @@ terraform {
 
 dependency "s3" {
   config_path = "../../storage/s3-frontend"
+
+  mock_outputs = {
+    bucket_id  = "mock-bucket-name"
+    bucket_arn = "arn:aws:s3:::mock-bucket-name"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "cloudfront" {
   config_path = "../../cdn/cloudfront"
+
+  mock_outputs = {
+    distribution_arn = "arn:aws:cloudfront::123456789012:distribution/EDFDVBD6EXAMPLE"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 inputs = {
