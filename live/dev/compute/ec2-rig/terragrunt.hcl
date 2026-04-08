@@ -8,15 +8,36 @@ terraform {
 
 dependency "network" {
   config_path = "../../networking/vpc"
+
+  mock_outputs = {
+    vpc_id              = "vpc-12345678"
+    private_subnet_ids  = ["subnet-11111111", "subnet-22222222"]
+    public_subnet_ids   = ["subnet-33333333", "subnet-44444444"]
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 dependency "rig_sg" {
   config_path = "../../networking/security-group/ec2-rig"
+
+    mock_outputs = {
+    security_group_id = "sg-12345678"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # ── NEW: IAM dependency ───────────────────────────────────
 dependency "iam" {
   config_path = "../../iam/ec2-role"
+
+  mock_outputs = {
+    instance_profile_name = "mock-instance-profile"
+    role_arn              = "arn:aws:iam::123456789012:role/mock-role"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 inputs = {
