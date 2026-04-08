@@ -1,6 +1,7 @@
 .terraform/
 *.tfstate
 *.tfstate.backup
+*.tfvars
 .terragrunt-cache/
 .panaces.zip
 
