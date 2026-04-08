@@ -147,7 +147,7 @@ locals {
       Sid    = "AllowALBLogs"
       Effect = "Allow"
       Principal = {
-        AWS = "arn:aws:iam::033677994240:root"
+        AWS = "arn:aws:iam::203221446879:root"
       }
       Action   = "s3:PutObject"
       Resource = "${aws_s3_bucket.this.arn}/alb/*"
