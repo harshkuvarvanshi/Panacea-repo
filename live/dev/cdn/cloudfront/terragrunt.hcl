@@ -9,6 +9,15 @@ terraform {
 
 dependency "s3_frontend" {
   config_path = "../../storage/s3-frontend"
+
+  mock_outputs = {
+    bucket_name                  = "mock-bucket-name"
+    bucket_arn                   = "arn:aws:s3:::mock-bucket-name"
+    bucket_domain_name           = "mock-bucket-name.s3.amazonaws.com"
+    bucket_regional_domain_name  = "mock-bucket-name.s3.ap-south-1.amazonaws.com"
+  }
+
+  mock_outputs_allowed_terraform_commands = ["init", "plan"]
 }
 
 # dependency "s3_artifacts" {
